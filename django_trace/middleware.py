@@ -1,12 +1,34 @@
 import sys
 from datetime import datetime
-from webint.models import Log
+from .models import Log
 from django.contrib.auth.models import User
-from webint.settings import TIME_ZONE
+from django.conf import settings
 import pytz
 from django.utils import timezone
 from django import http
 import traceback
+
+ONLY_TRACE_LOGGED_IN_USERS = True
+PATH_FILTER = []
+
+if hasattr(settings, 'DJANGO_TRACE'):
+    ONLY_TRACE_LOGGED_IN_USERS = settings.DJANGO_TRACE.get('ONLY_TRACE_LOGGED_IN_USERS', True)
+    PATH_FILTER = settings.DJANGO_TRACE.get('PATH_FILTER', [])
+
+
+def pass_filter(path):
+    """
+    path: is the url context without the host, like /admin/
+    returns a boolean
+    """
+    if path in ['/admin/django_trace/log/', '/admin/jsi18n/']:
+        return False
+
+    for val in PATH_FILTER:
+        if re.match(val, path):
+            return False
+    return True
+
 
 class MonitorMiddleware(object):
     def process_exception(self, request, exception):
@@ -31,13 +53,20 @@ class MonitorMiddleware(object):
             info = self.error
 
 
-        if request.get_full_path() not in ['/admin/webint/log/', '/admin/jsi18n/']:
+        if pass_filter(request.get_full_path()):
             user = None
             if hasattr(request, 'user') and not request.user.is_anonymous():
                 user = request.user
-        
+
+            if user is None and ONLY_TRACE_LOGGED_IN_USERS:
+                return
+
+            session = None
+            if request.session is not None:
+                session = request.session.session_key
+
             Log.objects.create(method=request.method,
                 path=request.get_full_path(), host=request.get_host(),
                 start=self.start_t, user=user, info=info, status=response.status_code,
-                duration=duration, session=request.session.session_key)
+                duration=duration, session=session)
         return response
