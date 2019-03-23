@@ -1,5 +1,4 @@
-import sys
-from datetime import datetime
+import re
 from .models import Log
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -10,11 +9,12 @@ import traceback
 
 ONLY_TRACE_LOGGED_IN_USERS = True
 PATH_FILTER = []
+MAX_LOG_COUNT = 10000
 
 if hasattr(settings, 'DJANGO_TRACE'):
-    ONLY_TRACE_LOGGED_IN_USERS = settings.DJANGO_TRACE.get('ONLY_TRACE_LOGGED_IN_USERS', True)
-    PATH_FILTER = settings.DJANGO_TRACE.get('PATH_FILTER', [])
-
+    ONLY_TRACE_LOGGED_IN_USERS = settings.DJANGO_TRACE.get('ONLY_TRACE_LOGGED_IN_USERS', ONLY_TRACE_LOGGED_IN_USERS)
+    PATH_FILTER = settings.DJANGO_TRACE.get('PATH_FILTER', PATH_FILTER)
+    MAX_LOG_COUNT = settings.DJANGO_TRACE.get('MAX_LOG_COUNT', MAX_LOG_COUNT)
 
 def pass_filter(path):
     """
@@ -48,6 +48,11 @@ class MonitorMiddleware(object):
         if request.method=='POST':
             if '_save' in request.POST:
                 info = 'save'
+            elif 'action' in request.POST and\
+                'delete_selected' in request.POST and\
+                'post' in request.POST and\
+                request.POST['post'] == ['yes']:
+                info = 'delete'
 
         if response.status_code == 500:
             info = self.error
@@ -59,7 +64,7 @@ class MonitorMiddleware(object):
                 user = request.user
 
             if user is None and ONLY_TRACE_LOGGED_IN_USERS:
-                return
+                return response
 
             session = None
             if request.session is not None:
@@ -69,4 +74,8 @@ class MonitorMiddleware(object):
                 path=request.get_full_path(), host=request.get_host(),
                 start=self.start_t, user=user, info=info, status=response.status_code,
                 duration=duration, session=session)
+
+            if Log.objects.all().count() > MAX_LOG_COUNT:
+                Log.objects.earliest('start').delete()
+
         return response
