@@ -22,11 +22,11 @@ EMAIL_USE_TLS = True
 
 DJANGO_TRACE = {
     "WARNING_EMAILS": ["me@mycompany.com"],
-    "MEMORY_THRESHOLD": 90,
-    "DISK_THRESHOLD": 90,
+    "MEMORY_THRESHOLD": 85,
+    "DISK_THRESHOLD": 85,
     "PATH_FILTER": [],
     "MAX_LOG_COUNT": 10000,
-    "ONLY_TRACE_LOGGED_IN_USERS": False
+    "ONLY_TRACE_LOGGED_IN_USERS": True
     }
 ```
 
@@ -40,12 +40,12 @@ By default, the system keeps 10000 records in the logs which can be modified by 
 
 **Sending alerts when resources are running low:**
 
-"WARNING_EMAILS" can be used to inform you when your server is running low on memory or disk usage. In order to use that, you
-need to specify either or both MEMORY_THRESHOLD and DISK_THRESHOLD which are percent usage threshold. Exceeding these values t
-riggers the emails.
-You must run the command
+"WARNING_EMAILS" can be used to inform you when your server is running low on memory or disk usage. In order to use that, you put the emails of the people whom need to be informed in the WARNING_EMAILS list.
+MEMORY_THRESHOLD and DISK_THRESHOLD have a 85% default but you can adjust them.
+
+Then, you must run the command
 ```
 python manage.py check_resources
 ```
-in your cron job.
+in your cron job to check the state of your server periodically.
 

@@ -21,10 +21,7 @@ def memory_check():
         logger.warn('No DJANGO_TRACE specified in the settings')
         return
 
-    threshold = settings.DJANGO_TRACE.get('MEMORY_THRESHOLD', None)
-    if threshold is None:
-        return
-
+    threshold = settings.DJANGO_TRACE.get('MEMORY_THRESHOLD', 85)
     emails = settings.DJANGO_TRACE.get('WARNING_EMAILS', [])
     if len(emails) < 1:
         logger.warn('No emails specified in DJANGO_TRACE["WARNING_EMAILS"]')
@@ -56,10 +53,7 @@ def disk_check():
         logger.warn('No DJANGO_TRACE specified in the settings')
         return
 
-    threshold = settings.DJANGO_TRACE.get('DISK_THRESHOLD', None)
-    if threshold is None:
-        return
-
+    threshold = settings.DJANGO_TRACE.get('DISK_THRESHOLD', 85)
     emails = settings.DJANGO_TRACE.get('WARNING_EMAILS', [])
     if len(emails) < 1:
         logger.warn('No emails specified in DJANGO_TRACE["WARNING_EMAILS"]')
