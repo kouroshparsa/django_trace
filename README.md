@@ -9,6 +9,7 @@ Each of these operations can be disabled and they are all secure
 
 **Configuration:**
 - in your settings.py, under INSTALLED_APPS, add 'django_trace'
+- add 'django_trace.middleware.MonitorMiddleware' to your MIDDLEWARE_CLASSES (for django<1.10) or MIDDLEWARE (for django >= 1.10)_inside your settings.py
 - optionally you can configure the options for django_trace by adding DJANGO_TRACE to your settings.py.
 
 Here is an optional configuration that you can put in your settings.py
