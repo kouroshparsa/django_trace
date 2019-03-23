@@ -5,18 +5,11 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 from django.conf import settings
 
+AUDIT = True
 if hasattr(settings, 'DJANGO_TRACE'):
-    if settings.DJANGO_TRACE.get('AUDIT', True):
-        @receiver(user_logged_in)
-        def login_callback(sender, **kwargs):
-            user = User.objects.get(username=kwargs['user'].username)
-            Audit.objects.create(user=user, action=Audit.LOGGED_IN)
+    AUDIT = settings.DJANGO_TRACE.get('AUDIT', True)
 
-        @receiver(user_logged_out)
-        def login_callback(sender, **kwargs):
-            user = User.objects.get(username=kwargs['user'].username)
-            Audit.objects.create(user=user, action=Audit.LOGGED_OUT)
-else: # no settingsL
+if AUDIT:
     @receiver(user_logged_in)
     def login_callback(sender, **kwargs):
         user = User.objects.get(username=kwargs['user'].username)
