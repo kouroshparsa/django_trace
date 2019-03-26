@@ -54,4 +54,9 @@ Then, you must run the command
 python manage.py check_resources
 ```
 in your cron job to check the state of your server periodically.
+There is a quiet period set to 1 day so if one of the resources is running low and an email is sent, the check will abort withing the next day. If you want to change the quiet period from the default 1 day, you can use the option QUIET_TIME_MINUTES within DJANGO_TRACE.
+
+Also, the host name is automatically determined to be included in the email. If you want to overwrite it, use the HOST option.
+
+If you have any questions or request, please feel free to contact the author or post it on github.
 

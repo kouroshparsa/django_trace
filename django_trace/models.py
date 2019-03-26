@@ -16,12 +16,12 @@ if AUDIT:
         Audit.objects.create(user=user, action=Audit.LOGGED_IN)
 
     @receiver(user_logged_out)
-    def login_callback(sender, **kwargs):
+    def logout_callback(sender, **kwargs):
         user = User.objects.get(username=kwargs['user'].username)
         Audit.objects.create(user=user, action=Audit.LOGGED_OUT)
 
 class Audit(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
     date = models.DateTimeField(auto_now=True)
     LOGGED_IN = 0
     LOGGED_OUT = 1
@@ -34,7 +34,7 @@ class Audit(models.Model):
         return unicode(self.user.username, act)
 
 class Log(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
     method = models.CharField(max_length=10)
     path = models.CharField(max_length=300)
     host = models.CharField(max_length=300)

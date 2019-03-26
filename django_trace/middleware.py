@@ -31,6 +31,16 @@ def pass_filter(path):
 
 
 class MonitorMiddleware(object):
+    # django >= 1.10:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        self.start_t = timezone.now()
+        response = self.get_response(request)
+        return self.process_response(request, response)
+
+    # django 1.8 and 1.9:
     def process_exception(self, request, exception):
         self.error = traceback.format_exc()
 
@@ -40,7 +50,7 @@ class MonitorMiddleware(object):
     def process_response(self, request, response):
         self.end_t = timezone.now()
         if not hasattr(self, 'start_t'):
-            print 'No start_t'
+            print('No start_t')
             self.start_t = self.end_t
         duration = (self.end_t - self.start_t).total_seconds()
 
@@ -60,8 +70,12 @@ class MonitorMiddleware(object):
 
         if pass_filter(request.get_full_path()):
             user = None
-            if hasattr(request, 'user') and not request.user.is_anonymous():
-                user = request.user
+            if isinstance(request.user.is_anonymous, bool): # django >= 1.10
+                if hasattr(request, 'user') and not request.user.is_anonymous:
+                    user = request.user
+            else: # otherwise, for django 1.8 is_anonymous is a method:
+                if hasattr(request, 'user') and not request.user.is_anonymous():
+                    user = request.user
 
             if user is None and ONLY_TRACE_LOGGED_IN_USERS:
                 return response
