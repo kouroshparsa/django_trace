@@ -32,7 +32,8 @@ def pass_filter(path):
 
 class MonitorMiddleware(object):
     # django >= 1.10:
-    def __init__(self, get_response):
+    def __init__(self, get_response=None):
+        # set to None because django 1.8 does not take a second parameter
         self.get_response = get_response
 
     def __call__(self, request):
@@ -70,12 +71,13 @@ class MonitorMiddleware(object):
 
         if pass_filter(request.get_full_path()):
             user = None
-            if isinstance(request.user.is_anonymous, bool): # django >= 1.10
-                if hasattr(request, 'user') and not request.user.is_anonymous:
-                    user = request.user
-            else: # otherwise, for django 1.8 is_anonymous is a method:
-                if hasattr(request, 'user') and not request.user.is_anonymous():
-                    user = request.user
+            if hasattr(request, 'user'):
+                if isinstance(request.user.is_anonymous, bool): # django >= 1.10
+                    if not request.user.is_anonymous:
+                        user = request.user
+                else: # otherwise, for django 1.8 is_anonymous is a method:
+                    if not request.user.is_anonymous():
+                        user = request.user
 
             if user is None and ONLY_TRACE_LOGGED_IN_USERS:
                 return response
