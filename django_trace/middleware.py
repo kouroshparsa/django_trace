@@ -65,7 +65,9 @@ class MonitorMiddleware(object):
                 request.POST['post'] == ['yes']:
                 info = 'delete'
 
-        if response.status_code == 500:
+        if response.status_code == 500 and hasattr(self, 'error'):
+            # typically process_exception is called but if there is a setup problem
+            # it will not be called
             info = self.error
 
 
