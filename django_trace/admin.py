@@ -4,16 +4,16 @@ from django.utils.html import mark_safe
 
 @admin.register(Log)
 class LogAdmin(admin.ModelAdmin):
-    list_display = ('url', 'start', 'user', 'method',
-                    'host', '_path',
+    list_display = ('start', 'user', 'method',
+                    'host',
                     'duration', 'status',
-                    'info', '_session')
+                    'info', '_session', '_path')
     list_filter = ('user', 'status')
     search_fields = ('path',)
 
     def _path(self, obj):
         return mark_safe('<a href="/admin/django_trace'\
-            '/log/?path={}">{}</a>'.format(obj.path, obj.path))
+            '/log/?path={}">{}</a>'.format(obj.path, obj.path[:40]))
 
     def _session(self, obj):
         return mark_safe('<a href="/admin/django_trace'\
