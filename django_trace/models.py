@@ -6,6 +6,8 @@ from django.dispatch import receiver
 from django.conf import settings
 
 AUDIT = True
+MAX_LEN = 300
+
 if hasattr(settings, 'DJANGO_TRACE'):
     AUDIT = settings.DJANGO_TRACE.get('AUDIT', True)
 
@@ -36,12 +38,13 @@ class Audit(models.Model):
 class Log(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
     method = models.CharField(max_length=10)
-    path = models.CharField(max_length=300)
-    host = models.CharField(max_length=300)
-    session = models.CharField(max_length=300, null=True, blank=True)
+    path = models.TextField(max_length)
+    host = models.CharField(max_length=MAX_LEN)
+    session = models.CharField(max_length=MAX_LEN, null=True, blank=True)
     start = models.DateTimeField()
     info = models.TextField(null=True, blank=True)
     duration = models.FloatField()
     status = models.PositiveIntegerField()
     def __unicode__(self):
         return str(self.start)
+

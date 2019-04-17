@@ -1,5 +1,5 @@
 import re
-from .models import Log
+from .models import Log, MAX_LEN
 from django.contrib.auth.models import User
 from django.conf import settings
 import pytz
@@ -86,11 +86,13 @@ class MonitorMiddleware(object):
 
             session = None
             if request.session is not None:
-                session = request.session.session_key
+                session = request.session.session_key[:MAX_LEN]
 
+            host = request.get_host()[:MAX_LEN]
             Log.objects.create(method=request.method,
-                path=request.get_full_path(), host=request.get_host(),
-                start=self.start_t, user=user, info=info, status=response.status_code,
+                path=request.get_full_path(), host=host,
+                start=self.start_t, user=user, info=info,
+                status=response.status_code,
                 duration=duration, session=session)
 
             if Log.objects.all().count() > MAX_LOG_COUNT:
