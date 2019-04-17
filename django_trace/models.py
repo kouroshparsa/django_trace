@@ -38,7 +38,7 @@ class Audit(models.Model):
 class Log(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
     method = models.CharField(max_length=10)
-    path = models.TextField(max_length)
+    path = models.TextField()
     host = models.CharField(max_length=MAX_LEN)
     session = models.CharField(max_length=MAX_LEN, null=True, blank=True)
     start = models.DateTimeField()
