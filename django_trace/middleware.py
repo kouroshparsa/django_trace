@@ -85,7 +85,8 @@ class MonitorMiddleware(object):
                 return response
 
             session = None
-            if request.session is not None:
+            if request.session is not None and\
+                request.session.session_key is not None:
                 session = request.session.session_key[:MAX_LEN]
 
             host = request.get_host()[:MAX_LEN]
