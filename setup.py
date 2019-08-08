@@ -13,6 +13,10 @@ inc_path = sysconfig.get_config_vars()['INCLUDEPY']
 
 version = '1.14'
 import sys
+long_description = ''
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='django_trace',
     version=version,
@@ -21,8 +25,9 @@ setup(
     license='GNU',
     author='Kourosh Parsa',
     author_email="kouroshtheking@gmail.com",
-    description='A package for monitoring your django web app',
-    long_description=__doc__,
+    description='django_trace is a python package for monitoring your django web app',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     packages=find_packages(),
     install_requires = ['django>=1.8'],
     python_requires='>=2.7',
