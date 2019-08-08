@@ -11,7 +11,7 @@ import os
 from distutils import sysconfig;
 inc_path = sysconfig.get_config_vars()['INCLUDEPY']
 
-version = '1.13'
+version = '1.14'
 import sys
 setup(
     name='django_trace',
