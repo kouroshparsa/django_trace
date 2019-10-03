@@ -1,10 +1,7 @@
 import re
 from .models import Log, MAX_LEN
-from django.contrib.auth.models import User
 from django.conf import settings
-import pytz
 from django.utils import timezone
-from django import http
 import traceback
 
 ONLY_TRACE_LOGGED_IN_USERS = True
@@ -15,6 +12,7 @@ if hasattr(settings, 'DJANGO_TRACE'):
     ONLY_TRACE_LOGGED_IN_USERS = settings.DJANGO_TRACE.get('ONLY_TRACE_LOGGED_IN_USERS', ONLY_TRACE_LOGGED_IN_USERS)
     PATH_FILTER = settings.DJANGO_TRACE.get('PATH_FILTER', PATH_FILTER)
     MAX_LOG_COUNT = settings.DJANGO_TRACE.get('MAX_LOG_COUNT', MAX_LOG_COUNT)
+
 
 def pass_filter(path):
     """
@@ -69,7 +67,6 @@ class MonitorMiddleware(object):
             # typically process_exception is called but if there is a setup problem
             # it will not be called
             info = self.error
-
 
         if pass_filter(request.get_full_path()):
             user = None

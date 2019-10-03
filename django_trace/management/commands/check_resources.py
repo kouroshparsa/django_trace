@@ -18,6 +18,7 @@ QUIET_TIME_MINUTES = 24 * 60
 if hasattr(settings, 'DJANGO_TRACE'):
     QUIET_TIME_MINUTES = settings.DJANGO_TRACE.get(QUIET_TIME_MINUTES, QUIET_TIME_MINUTES)
 
+
 def memory_check():
     """
     Example: 90 threshold

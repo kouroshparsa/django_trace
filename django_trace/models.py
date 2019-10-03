@@ -39,6 +39,7 @@ class Audit(models.Model):
         (LOGGED_IN, 'Logged in'),
         (LOGGED_OUT, 'Logged out')]
     action = models.PositiveIntegerField(choices=ACTION_TYPES)
+
     def __unicode__(self):
         act = 'Logged in'
         if self.action == self.LOGGED_OUT:

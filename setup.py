@@ -7,12 +7,10 @@ django_trace is a python package for monitoring your django web app
   https://github.com/kouroshparsa/django_trace
 """
 from setuptools import Command, setup, find_packages
-import os
 from distutils import sysconfig;
 inc_path = sysconfig.get_config_vars()['INCLUDEPY']
 
-version = '1.14'
-import sys
+version = '1.15'
 long_description = ''
 with open("README.md", "r") as fh:
     long_description = fh.read()
