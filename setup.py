@@ -10,7 +10,7 @@ from setuptools import Command, setup, find_packages
 from distutils import sysconfig;
 inc_path = sysconfig.get_config_vars()['INCLUDEPY']
 
-version = '1.15'
+version = '2.0.0'
 long_description = ''
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -27,7 +27,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=find_packages(),
-    install_requires = ['django>=1.8'],
+    install_requires = ['django>=1.8', 'django-autocomplete-light>=3.8',],
     python_requires='>=2.7',
     include_package_data=True,
     zip_safe=False,

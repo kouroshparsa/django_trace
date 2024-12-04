@@ -25,7 +25,7 @@ def memory_check():
     if 95% memory is used, specified users will receive a warning email
     """
     if not hasattr(settings, 'DJANGO_TRACE'):
-        logger.warn('No DJANGO_TRACE specified in the settings')
+        logger.warning('No DJANGO_TRACE specified in the settings')
         return
 
     threshold = settings.DJANGO_TRACE.get('MEMORY_THRESHOLD', None)
@@ -34,7 +34,7 @@ def memory_check():
 
     emails = settings.DJANGO_TRACE.get('WARNING_EMAILS', [])
     if len(emails) < 1:
-        logger.warn('No emails specified in DJANGO_TRACE["WARNING_EMAILS"]')
+        logger.warning('No emails specified in DJANGO_TRACE["WARNING_EMAILS"]')
         return
 
     if psutil.virtual_memory().percent > threshold:

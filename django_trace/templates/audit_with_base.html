@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_head %}
+<script src="{% static 'django_trace/jquery-3.7.1.min.js' %}"></script>
+<link href="{% static 'django_trace/select2.min.css' %}" rel="stylesheet">
+<script src="{% static 'django_trace/select2.min.js' %}"></script>
+<script src="{% static 'django_trace/audit.js' %}?v=3"></script>
+{% endblock %}
+
+{% block content %}
+<h1>Audit Logs</h1>
+{% load static %}
+	<form method="get" action="{% url 'django_trace:audit' %}">
+		<div class="filters">
+			<label for="filter-user">User:</label>
+			<select id="filter-user" name="filter_user" data-placeholder="User" style="width: 200px;">
+				{% if filter_user %}
+				<option value="{{ filter_user }}" selected="selected">{{ filter_user }}</option>
+				{% endif %}
+			</select>
+			
+			<label for="filter-session">Session:</label>
+			<input type="text" id="filter-session" name="filter_session" value="{{ request.GET.filter_session|default:'' }}" placeholder="Enter part of the message">
+
+			<button class="btn btn-primary" type="submit">Apply Filters</button>
+		</div>
+	</form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="timestamp">Timestamp</th>
+                <th>User</th>
+                <th>Method</th>
+				<th>Duration</th>
+				<th>Status</th>
+				<th>Info</th>
+				<th>Session</th>
+				<th>path</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+			<tr>
+            <td class="timestamp">{{ log.start }}</td>
+            <td>{{ log.user }}</td>
+			<td>{{ log.method }}</td>
+			<td>{{ log.duration }}</td>
+			<td>{{ log.status }}</td>
+			<td>{{ log.info }}</td>
+			<td><a href="{% url 'django_trace:audit' %}?filter_session={{ log.session }}">{{ log.session }}</a></td>
+			<td>{{ log.path }}</td>
+			</tr>
+			{% endfor %}
+        </tbody>
+    </table>
+
+	<div class="pagination">
+		<span class="step-links">
+			{% if page_obj.has_previous %}
+				<a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page=1">&laquo; first</a>
+				<a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">previous</a>
+			{% endif %}
+
+			<span class="current">
+				Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+			</span>
+
+			{% if page_obj.has_next %}
+				<a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}">next</a>
+				<a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.paginator.num_pages }}">&raquo; last</a>
+			{% endif %}
+		</span>
+	</div>
+{% endblock %}
