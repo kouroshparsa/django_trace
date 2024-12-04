@@ -1,0 +1,2 @@
+recursive-include django_trace/static *
+recursive-include django_trace/templates *

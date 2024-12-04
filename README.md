@@ -75,7 +75,9 @@ Below are sample images of that:
 Moreover, you can add custom views for the audit as explained below.
 
 ## Making A Custom Audit Page
-To make a custom audit page, modify your `urls.py` file as below:
+To make a custom audit page,
+- Run `python manage.py collectstatic` to ensure static files are fetched.
+- Modify your `urls.py` file as below:
 
 ```python
 from django.urls import path, include
@@ -84,6 +86,7 @@ urlpatterns = [
     path('audit/', include('django_trace.urls')),
 ]
 ```
+
 
 This will produce a view at `/audit`.
 Note that if you have created a `base.html` in your template folder, django_trace will use your template automatically.
