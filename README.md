@@ -59,7 +59,7 @@ There is a quiet period set to 1 day so if one of the resources is running low a
 Also, the host name is automatically determined to be included in the email. If you want to overwrite it, use the `HOST` option.
 
 ## How use the audit
-After installing, and configuring django_trace, make sure you migrate the database as previously explained.
+After installing, and configuring `django_trace`, make sure you migrate the database as previously explained.
 
 Then, you'll get admin pages created for the audit.
 
@@ -87,10 +87,27 @@ urlpatterns = [
 ]
 ```
 
+- Make sure you have `django_trace` as well as `dal` and `dal_select2` in your `INSTALLED_APPS` as below:
 
-This will produce a view at `/audit`.
-Note that if you have created a `base.html` in your template folder, django_trace will use your template automatically.
-However, if you do not have it, it will stil generate a usable view as shown below:
+```python
+INSTALLED_APPS = [
+    'myapp',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'dal',
+    'dal_select2',
+    'django_trace',
+]
+```
+
+This will produce a view at `/audit`. It can be viewed by logged in users.
+Note that if you have created a `base.html` in your template folder, django_trace will use your template automatically so that you can display customized top header or side bar.
+
+However, if you do not have it, django_trace will stil generate a usable view as shown below:
 
 ![screenshot](img/audit-custom-template.png)
 

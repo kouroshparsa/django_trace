@@ -17,12 +17,18 @@
 			<label for="filter-user">User:</label>
 			<select id="filter-user" name="filter_user" data-placeholder="User" style="width: 200px;">
 				{% if filter_user %}
-				<option value="{{ filter_user }}" selected="selected">{{ filter_user }}</option>
+				<option value="{{ filter_user }}" selected="selected">{{ filter_user_name }}</option>
 				{% endif %}
 			</select>
 			
 			<label for="filter-session">Session:</label>
-			<input type="text" id="filter-session" name="filter_session" value="{{ request.GET.filter_session|default:'' }}" placeholder="Enter part of the message">
+			<input type="text" id="filter-session" name="filter_session" value="{{ request.GET.filter_session|default:'' }}" placeholder="Enter session id">
+
+			<label for="filter-date-from">After:</label>
+			<input type="datetime-local" id="filter-date-from" name="filter_date_from" value="{{ request.GET.filter_date_from|default:'' }}">
+
+			<label for="filter-date-to">Before:</label>
+			<input type="datetime-local" id="filter-date-to" name="filter_date_to" value="{{ request.GET.filter_date_to|default:'' }}">
 
 			<button class="btn btn-primary" type="submit">Apply Filters</button>
 		</div>

@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.conf.urls import url
 from .models import *
 from .forms import *
 import time

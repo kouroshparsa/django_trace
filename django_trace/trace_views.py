@@ -1,13 +1,14 @@
 from dal import autocomplete
-from django.views.generic import View
 from django.shortcuts import render
 from django.template import TemplateDoesNotExist, engines
 from . import controller
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 
 
-class AuditView(View):
+class AuditView(LoginRequiredMixin, TemplateView):
     def get(self, request):
         django_engine = engines['django']  # Django template engine
         data = controller.get_data(request)
@@ -22,7 +23,7 @@ class AuditView(View):
         return render(request, 'audit.html', data)
 
 
-class UsersAutocompleteView(autocomplete.Select2QuerySetView):
+class UsersAutocompleteView(LoginRequiredMixin,autocomplete.Select2QuerySetView):
     def get_queryset(self):
         if not self.request.user.is_authenticated:
             return User.objects.none()

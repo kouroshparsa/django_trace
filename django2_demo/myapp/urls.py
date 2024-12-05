@@ -1,12 +1,8 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 admin.autodiscover()
 
-#urlpatterns = [
-#    url(r'^admin/', include(admin.site.urls)),
-#    url(r'^$', include(admin.site.urls)),
-#    url(r'^main/$', 'myapp.views.main', name='main'),
-#]
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('audit/', include('django_trace.urls')),
     ]

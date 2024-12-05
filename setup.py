@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 from distutils import sysconfig;
 inc_path = sysconfig.get_config_vars()['INCLUDEPY']
 
-version = '2.0.1'
+version = '2.0.2'
 long_description = ''
 with open("README.md", "r") as fh:
     long_description = fh.read()
